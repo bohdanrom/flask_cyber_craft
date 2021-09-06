@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+<section class="main">
+    <div class="form">
+        <form action="" method="post" class="form-for-github-login">
+            <label for="github-login-input" class="label-for-input-github-login">
+                Github Login
+                <input type="text" name="gitHubLogin" style="display:block" class="github-login-input">
+            </label>
+            <input type="submit" style="display:block" class="submit-button">
+        </form>
+    </div>
+</section>
+<section class="results">
+    <div class="results_from_github_api">
+        <h3 class="github-name">
+        {% if github_name is none -%}
+            null
+        {%- else -%}
+            {{ github_name }}
+        {%- endif %}
+    </h3>
+    {% for elem in github_repos %}
+        <p class="repos-names">- {{ elem }}</p>
+    {% endfor %}
+    </div>
+</section>
+</body>
+</html>

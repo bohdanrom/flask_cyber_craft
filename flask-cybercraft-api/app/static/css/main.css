@@ -1,0 +1,73 @@
+body{
+    font-family: Arial sans-serif;
+}
+form{
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.github-login-input{
+    color: rgba(255,255,255,0.85);
+    border-radius: 3px;
+    padding-left: 2px;
+    width: 300px;
+    height: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #000000;
+    font-size: 25px;
+}
+.label-for-input-github-login{
+    font-size: 25px;
+}
+.main{
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+}
+.form{
+    margin: 0 auto;
+    text-align: left;
+}
+.repos-names{
+    font-size: 20px;
+}
+.submit-button{
+    color: rgba(255,255,255,0.85);
+    background: #169c3f;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 10px 10px 10px;
+    width: 308px;
+    height: 50px;
+    text-align: center;
+    display: inline-block;
+    font-size: 25px;
+    font-weight: bold;
+    box-shadow: 7px 6px 28px 1px rgba(0, 0, 0, 0.24);
+    outline: none;
+    transition: 0.2s all;
+    cursor: pointer;
+}
+.submit-button:active, .submit-button:active {
+    transform: scale(0.98);
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+}
+.github-name{
+    font-weight: bold;
+    font-size: 25px;
+}
+.results{
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    text-align: left;
+}
+.results_from_github_api{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    text-align: left;
+    margin: 0 auto;
+}
