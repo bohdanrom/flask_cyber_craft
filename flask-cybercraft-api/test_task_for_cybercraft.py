@@ -3,6 +3,9 @@
 import pytest
 
 from schema import extract
+from flask import current_app
+
+from app.main import app
 
 
 @pytest.mark.parametrize(
@@ -10,18 +13,21 @@ from schema import extract
     [
         ("roykoand", {"github_name": "Andrii Roiko", "github_repos": []}),
         ("bohdanrom", {"github_name": None,
-                       "github_repos": ["Bash", "Game-Store", "project"]}),
+                       "github_repos": ["Bash", "flask_cyber_craft", "Game-Store",
+                                        "project"]}),
         ("vitaliy026-00", {"github_name": "Vitalii",
                            "github_repos": ["Devops-SummerSchool",
                                             "test_task_yalantis", "vitaliy026-00"]}),
-        ("MixaKonon", {"github_name": "Mykhailo Konontsev",
+        ("MixaKonan", {"github_name": "Mykhailo Konontsev",
                        "github_repos": ["Litter-WebApplication-UrlShortener",
                                         "Menhera", "Menherachan", "menherachan-frontend",
-                                        "RivneDating-TeleBot", "ToM-ProxyApi"
+                                        "RivneDating-TeleBot", "ToM-ProxyApi",
                                         "ToM-TelegramBot", "Twitch-o-matic"]})
     ]
 )
 def test_extract_functions(github_login_for_test, expected_result):
     """ This is parametrize test-function for schema.extract function"""
-    url = "https://api.github.com/users/"
-    assert extract(url+github_login_for_test) == expected_result
+    with app.app_context():
+        with current_app.test_request_context():
+            url = "https://api.github.com/users/"
+            assert extract(url+github_login_for_test) == expected_result
