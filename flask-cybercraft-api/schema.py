@@ -3,6 +3,7 @@
 import requests
 
 import graphene
+from flask import request
 
 
 def extract(url: str) -> dict:
@@ -14,6 +15,22 @@ def extract(url: str) -> dict:
     https://api.github.com/users/<GITHUB_LOGIN>/repos
     :return Dictionary with github name of account and his or her repositories names
     """
+    if request.url.find("/main") != -1:
+        _url = request.url[:request.url.find("/main")] + "/graphql"
+        query = """{
+        website(url: "%s")
+             {
+                 githubName
+                 githubRepos
+             }
+         }
+                     """ % url
+        response = requests.post(url=_url, json={"query": query}, headers={"Content-Type": "application/json"})
+        response_json = response.json().get("data").get("website")
+        return {
+                "github_name": response_json.get("githubName"),
+                "github_repos": response_json.get("githubRepos")
+        }
     if url.endswith("/repos"):
         github_repos = [elem.get("name") for elem in requests.get(url).json()]
         github_name = requests.get(url[:url.find("/repos")]).json().get("name")
@@ -21,12 +38,13 @@ def extract(url: str) -> dict:
                 "github_name": github_name,
                 "github_repos": github_repos
                 }
-    github_name = requests.get(url).json().get("name")
-    github_repos = [elem.get("name") for elem in requests.get(url + "/repos").json()]
-    return {
-        "github_name": github_name,
-        "github_repos": github_repos
-    }
+    elif url.endswith("/repos") is False:
+        github_name = requests.get(url).json().get("name")
+        github_repos = [elem.get("name") for elem in requests.get(url + "/repos").json()]
+        return {
+            "github_name": github_name,
+            "github_repos": github_repos
+        }
 
 
 class GithubApi(graphene.ObjectType):
