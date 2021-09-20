@@ -1,6 +1,6 @@
 # Test task(API with GraphQL) for CyberCraft
 
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request
 from flask_graphql import GraphQLView
 from schema import schema, extract
 
@@ -18,7 +18,7 @@ def main():
     if request.method == "POST":
         github_login = request.form.get("gitHubLogin")
         if github_login:
-            api_response = extract(f"https://api.github.com/users/{github_login}")
+            api_response = extract(url=f"https://api.github.com/users/{github_login}")
             return render_template("index.html",
                                    github_name=api_response.get("github_name"),
                                    github_repos=api_response.get("github_repos"))
