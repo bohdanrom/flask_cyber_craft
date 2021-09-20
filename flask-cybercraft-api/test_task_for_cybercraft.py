@@ -16,7 +16,7 @@ from app.main import app
                        "github_repos": ["Bash", "flask_cyber_craft", "Game-Store",
                                         "project"]}),
         ("vitaliy026-00", {"github_name": "Vitalii",
-                           "github_repos": ["Devops-SummerSchool",
+                           "github_repos": ["Devops-SummerSchool", "gogs",
                                             "test_task_yalantis", "vitaliy026-00"]}),
         ("MixaKonan", {"github_name": "Mykhailo Konontsev",
                        "github_repos": ["Litter-WebApplication-UrlShortener",
