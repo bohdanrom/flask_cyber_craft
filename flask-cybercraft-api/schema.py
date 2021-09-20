@@ -16,20 +16,24 @@ def extract(url: str) -> dict:
     :return Dictionary with github name of account and his or her repositories names
     """
     if request.url.find("/main") != -1:
-        _url = request.url[:request.url.find("/main")] + "/graphql"
-        query = """{
-        website(url: "%s")
-             {
-                 githubName
-                 githubRepos
-             }
-         }
-                     """ % url
-        response = requests.post(url=_url, json={"query": query}, headers={"Content-Type": "application/json"})
-        response_json = response.json().get("data").get("website")
+        _url = "https://api.github.com/graphql"
+        query = """
+        query{
+            user(login: "%s") {
+                name
+                repositories(first: 100) {
+                    nodes {
+                        name
+                    }
+                }
+            }
+        }
+        """ % url[len("https://api.github.com/users/"):]
+        response = requests.post(url=_url, json={"query": query}, headers={"Authorization": "token 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", "Content-Type": "application/json"})
+        response_json = response.json().get("data").get("user")
         return {
-                "github_name": response_json.get("githubName"),
-                "github_repos": response_json.get("githubRepos")
+                "github_name": response_json.get("name"),
+                "github_repos": [repo.get("name") for repo in response_json.get("repositories").get("nodes")]
         }
     if url.endswith("/repos"):
         github_repos = [elem.get("name") for elem in requests.get(url).json()]
@@ -56,11 +60,11 @@ class GithubApi(graphene.ObjectType):
 
 class Query(graphene.ObjectType):
     """ This is a class that send queries to the Github API """
-    website = graphene.Field(GithubApi, url=graphene.String())
+    website = graphene.Field(GithubApi, url=graphene.String(), required=True)
 
     def resolve_website(self, info, url: str) -> GithubApi:
         """
-        Method which run extract function and receives date from request
+        Method which runs extract function and receives date from request
         :param info: info for query and schema meta information and per-request context
         :param url: String which contains url address
         :return: GithubApi class object
