@@ -15,7 +15,8 @@ def extract(url: str) -> dict:
     https://api.github.com/users/<GITHUB_LOGIN>/repos
     :return Dictionary with github name of account and his or her repositories names
     """
-    if request.url.find("/main") != -1:
+    headers = {"Authorization": "token"}
+    if request.url.find("/receive_json") != -1:
         _url = "https://api.github.com/graphql"
         query = """
         query{
@@ -29,22 +30,23 @@ def extract(url: str) -> dict:
             }
         }
         """ % url[len("https://api.github.com/users/"):]
-        response = requests.post(url=_url, json={"query": query}, headers={"Authorization": "token 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", "Content-Type": "application/json"})
+        headers["Content-Type"] = "application/json"
+        response = requests.post(url=_url, json={"query": query}, headers=headers)
         response_json = response.json().get("data").get("user")
         return {
-                "github_name": response_json.get("name"),
-                "github_repos": [repo.get("name") for repo in response_json.get("repositories").get("nodes")]
+                    "github_name": response_json.get("name"),
+                    "github_repos": [repo.get("name") for repo in response_json.get("repositories").get("nodes")]
         }
     if url.endswith("/repos"):
-        github_repos = [elem.get("name") for elem in requests.get(url).json()]
-        github_name = requests.get(url[:url.find("/repos")]).json().get("name")
+        github_repos = [elem.get("name") for elem in requests.get(url, headers=headers).json()]
+        github_name = requests.get(url[:url.find("/repos")], headers=headers).json().get("name")
         return {
                 "github_name": github_name,
                 "github_repos": github_repos
                 }
     elif url.endswith("/repos") is False:
-        github_name = requests.get(url).json().get("name")
-        github_repos = [elem.get("name") for elem in requests.get(url + "/repos").json()]
+        github_name = requests.get(url, headers=headers).json().get("name")
+        github_repos = [elem.get("name") for elem in requests.get(url + "/repos", headers=headers).json()]
         return {
             "github_name": github_name,
             "github_repos": github_repos
