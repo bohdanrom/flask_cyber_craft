@@ -57,6 +57,7 @@ form{
 .github-name{
     font-weight: bold;
     font-size: 25px;
+    margin-bottom: 5px;
 }
 .results{
     display: flex;
