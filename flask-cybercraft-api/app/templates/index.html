@@ -4,31 +4,25 @@
     <meta charset="UTF-8">
     <title>Main page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/ajax.js') }}"></script>
 </head>
 <body>
 <section class="main">
     <div class="form">
-        <form action="" method="post" class="form-for-github-login">
+        <form action="" id="form-for-github-login" method="post" class="form-for-github-login">
             <label for="github-login-input" class="label-for-input-github-login">
                 Github Login
-                <input type="text" name="gitHubLogin" style="display:block" class="github-login-input">
+                <input type="text" name="gitHubLogin" style="display:block" id="github-login-input" class="github-login-input">
             </label>
-            <input type="submit" style="display:block" class="submit-button">
+            <input type="submit" style="display:block" id="submit-button" class="submit-button">
         </form>
     </div>
 </section>
 <section class="results">
     <div class="results_from_github_api">
-        <h3 class="github-name">
-        {% if github_name is none -%}
-            null
-        {%- else -%}
-            {{ github_name }}
-        {%- endif %}
-    </h3>
-    {% for elem in github_repos %}
-        <p class="repos-names">- {{ elem }}</p>
-    {% endfor %}
+        <h3 id="github-name" class="github-name"></h3>
+        <div id="repos" class="repos"></div>
     </div>
 </section>
 </body>
