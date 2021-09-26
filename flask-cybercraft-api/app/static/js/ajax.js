@@ -9,7 +9,7 @@ $( document ).ready(function() {
 	);
 function sendAjaxForm() {
     $.ajax({
-        url: '/receive_json',
+        url: '/graphql',
         type: "POST",
         dataType: "html",
         data: $("#form-for-github-login").serialize(),
