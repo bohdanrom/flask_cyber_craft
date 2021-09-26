@@ -8,15 +8,13 @@ from flask import request
 
 def extract(url: str) -> dict:
     """
-    Function for receiving data(github name, repositories names from parameter <url>
+    Function for receiving data from form(github name, repositories names from parameter <url>
     :param url String that contains url address for parsing in our case it's
     https://api.github.com/users/<GITHUB_LOGIN>
-    or
-    https://api.github.com/users/<GITHUB_LOGIN>/repos
     :return Dictionary with github name of account and his or her repositories names
     """
-    headers = {"Authorization": "token"}
-    if request.url.find("/receive_json") != -1:
+    headers = {"Authorization": "token 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"}
+    if request.referrer.find("/main") != 1:
         _url = "https://api.github.com/graphql"
         query = """
         query{
@@ -37,6 +35,18 @@ def extract(url: str) -> dict:
                     "github_name": response_json.get("name"),
                     "github_repos": [repo.get("name") for repo in response_json.get("repositories").get("nodes")]
         }
+
+
+def extract_from_ide(url: str) -> dict:
+    """
+    Function for receiving data GraphQL IDE(github name, repositories names from parameter <url>
+    :param url String that contains url address for parsing in our case it's
+    https://api.github.com/users/<GITHUB_LOGIN>
+    or
+    https://api.github.com/users/<GITHUB_LOGIN>/repos
+    :return Dictionary with github name of account and his or her repositories names
+    """
+    headers = {"Authorization": "token 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"}
     if url.endswith("/repos"):
         github_repos = [elem.get("name") for elem in requests.get(url, headers=headers).json()]
         github_name = requests.get(url[:url.find("/repos")], headers=headers).json().get("name")
@@ -72,7 +82,7 @@ class Query(graphene.ObjectType):
         :return: GithubApi class object
         with data from Github API: github name and repositories names
         """
-        extracted = extract(url)
+        extracted = extract_from_ide(url)
         return GithubApi(url=url,
                          github_name=extracted.get("github_name"),
                          github_repos=extracted.get("github_repos"))
