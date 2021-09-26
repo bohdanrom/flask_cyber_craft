@@ -6,15 +6,19 @@ from schema import schema, extract
 
 
 app = Flask(__name__)
-app.add_url_rule('/graphql', view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True))
 
 
-@app.post('/receive_json')
-def receive_json():
+@app.route('/graphql', methods=["POST", "GET"])
+def graphql():
     """This function receives data from input field by AJAX and send JSON response"""
-    github_login = request.form.get("gitHubLogin")
-    api_response = extract(url=f"https://api.github.com/users/{github_login}")
-    return jsonify(api_response)
+    if request.referrer is not None and request.referrer.find("/main") != 1:
+        if request.method == "POST":
+            if request.form.get("gitHubLogin"):
+                github_login = request.form.get("gitHubLogin")
+                api_response = extract(url=f"https://api.github.com/users/{github_login}")
+                return jsonify(api_response)
+    else:
+        return GraphQLView.as_view('graphiql', schema=schema, graphiql=True)()
 
 
 @app.get('/main')
