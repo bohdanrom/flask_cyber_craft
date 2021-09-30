@@ -2,7 +2,7 @@
 
 import pytest
 
-from schema import extract
+from schema import extract_from_ide
 from flask import current_app
 
 from app.main import app
@@ -13,8 +13,7 @@ from app.main import app
     [
         ("roykoand", {"github_name": "Andrii Roiko", "github_repos": []}),
         ("bohdanrom", {"github_name": None,
-                       "github_repos": ["Bash", "flask_cyber_craft", "Game-Store",
-                                        "project"]}),
+                       "github_repos": ["Bash", "Game-Store", "project"]}),
         ("vitaliy026-00", {"github_name": "Vitalii",
                            "github_repos": ["Devops-SummerSchool", "gogs",
                                             "test_task_yalantis", "vitaliy026-00"]}),
@@ -30,4 +29,4 @@ def test_extract_functions(github_login_for_test, expected_result):
     with app.app_context():
         with current_app.test_request_context():
             url = "https://api.github.com/users/"
-            assert extract(url+github_login_for_test) == expected_result
+            assert extract_from_ide(url+github_login_for_test) == expected_result
