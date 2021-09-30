@@ -3,38 +3,6 @@
 import requests
 
 import graphene
-from flask import request
-
-
-def extract(url: str) -> dict:
-    """
-    Function for receiving data from form(github name, repositories names from parameter <url>
-    :param url String that contains url address for parsing in our case it's
-    https://api.github.com/users/<GITHUB_LOGIN>
-    :return Dictionary with github name of account and his or her repositories names
-    """
-    headers = {"Authorization": "token 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"}
-    if request.referrer.find("/main") != 1:
-        _url = "https://api.github.com/graphql"
-        query = """
-        query{
-            user(login: "%s") {
-                name
-                repositories(first: 100) {
-                    nodes {
-                        name
-                    }
-                }
-            }
-        }
-        """ % url[len("https://api.github.com/users/"):]
-        headers["Content-Type"] = "application/json"
-        response = requests.post(url=_url, json={"query": query}, headers=headers)
-        response_json = response.json().get("data").get("user")
-        return {
-                    "github_name": response_json.get("name"),
-                    "github_repos": [repo.get("name") for repo in response_json.get("repositories").get("nodes")]
-        }
 
 
 def extract_from_ide(url: str) -> dict:
@@ -46,7 +14,7 @@ def extract_from_ide(url: str) -> dict:
     https://api.github.com/users/<GITHUB_LOGIN>/repos
     :return Dictionary with github name of account and his or her repositories names
     """
-    headers = {"Authorization": "token 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"}
+    headers = {"Authorization": "token "}
     if url.endswith("/repos"):
         github_repos = [elem.get("name") for elem in requests.get(url, headers=headers).json()]
         github_name = requests.get(url[:url.find("/repos")], headers=headers).json().get("name")
