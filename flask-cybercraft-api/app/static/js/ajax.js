@@ -8,11 +8,22 @@ $( document ).ready(function() {
 		}
 	);
 function sendAjaxForm() {
+	let githubLogin = $("#github-login-input").val()
+	let query = `query{
+            user(login: "${githubLogin}") {
+                name
+                repositories(first: 100) {
+                    nodes {
+                        name
+                    }
+                }
+            }
+        }`
     $.ajax({
         url: '/graphql',
         type: "POST",
         dataType: "html",
-        data: $("#form-for-github-login").serialize(),
+        data: query,
         success: function(response) {
 			if ($(".repos-names").length){
 				$(".repos-names").remove()
